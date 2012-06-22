@@ -1,0 +1,33 @@
+
+
+#example {
+    margin-top: 40px;
+    height:100%;
+    width:100%;
+}
+
+.info_details {
+    padding: 15px;
+}
+.church_name {
+    background-color: #C9EDF2;
+    font-weight: bold;
+}
+
+.church_details {
+    background-color: #C2BEBF;
+}
+
+.button_box {
+    background-color: #3B3738;
+}
+
+.info_box {
+    color: #363838;
+    font-family: Arial;
+    font-size: 13px;
+    width: 320px;
+    /*height: 135px;*/
+    padding: 0px;
+    border: 1px solid #363838;
+}
