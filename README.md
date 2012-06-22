@@ -1,8 +1,10 @@
 google-maps-bootstrap
 =====================
 
-Basic app that plots some points(in this case SDA churches) on a map and builds a route on request. 
+Basic app that plots some points(in this case SDA churches) on a map and builds a route on request.
+
 Very nice!!! 
+
 Uses: 
 - Google Maps V3 
 - Twitter Bootstrap
