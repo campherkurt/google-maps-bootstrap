@@ -7,6 +7,7 @@
         <meta name="Seventh-day Adventist Church locator using Google Maps. Mainly for South Africa." content="">
         <meta name="Kurt Campher, campherkurt2@gmail.com" content="">
 
+        <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.0-beta.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="assets/css/map.css" />
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css">
@@ -24,7 +25,7 @@
               <a class="brand" href="#">Find a SDA church?</a>
               <div class="nav-collapse">
                 <ul class="nav">
-                  <li class="active"><a href="#">Home</a></li>
+                  <li><a href="#search_box" data-toggle="modal">Search</a></li>
                   <li><a href="#about">About</a></li>
                   <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -34,10 +35,23 @@
         </div>
         <div id="example" >
         </div>
-        
+        <div id="search_box" class="modal fade">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">×</button>
+                <h3>Search for a congregation!</h3>
+            </div>
+            <div class="modal-body">
+                <form id="search_form" class="well form-search">
+                    <input type="text" class="input-medium search-query" id="search_input">
+                    <button type="submit" class="btn" id="search_button">Search</button>
+                </form>
+            </div>
+        </div>
         <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script src="assets/js/jquery.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.9.0-beta.1/jquery-ui.js"></script>
+
         <!--script type="text/javascript" src="assets/js/gmap3.js"></script-->
         <script type="text/javascript" src="http://www.google.com/jsapi"></script>
         <script type="text/javascript" src="assets/js/infoBoxStyles.js"></script>
@@ -56,8 +70,31 @@
         <script src="assets/js/bootstrap-collapse.js"></script>
         <script src="assets/js/bootstrap-carousel.js"></script>
         <script src="assets/js/bootstrap-typeahead.js"></script>
+        <script type="text/javascript">
+            var USER_POSITION;
+            var DESTINATION_MARKER;
+            var ALL_MARKERS = [];
+            var SEARCH_MARKER_ICON = google.maps.MarkerImage("assets/img/star-3.png");
+            var coordinateArray = [
+                {coordinates: new google.maps.LatLng(-33.989976,18.501597), id: "lansdowne", title: "Lansdowne Church", address_details: "Cnr of Leafmore Rd and Kritzinger Rd<br/>Kenwyn<br/>Ps.: Dan Serb<br/>Elder: Nigel Tyhalibongo<br/>xtyhalibongo@uwc.ac.za"},
+                {coordinates: new google.maps.LatLng(-34.02669,18.466301), id: "plumstead", title: "Plumstead Church", address_details: "242 Main Road<br/>Plumstead<br/>Ps.: Dan Serb<br/>Elder: Eric Bender<br/>redneb@telkomsa.net"},
+                {coordinates: new google.maps.LatLng(-33.950358,18.470487), id: "mowbray", title: "Mowbray Church", address_details: "10 Bollihope Crescent<br/>Mowbray<br/>Ps.: Dan Serb<br/>Head Eldr: Simon Hayes<br/>sdamb@xsinet.co.za"},
+                {coordinates: new google.maps.LatLng(-34.010946,18.474093), id: "wynberg", title: "Wynberg Church", address_details: "10 Hertford Road<br/>Wynberg<br/>Ps.: Dan Serb<br/>Elder: R Langenhoven<br/>randall@wescape.co.za"},        
+                {coordinates: new google.maps.LatLng(-33.982736,18.463622), id: "claremont", title: "Claremont Church", address_details: "21 Grove Avenue<br/>Claremont<br/>Ps.: Dan Serb<br/>Elder: A Adriaanse<br/>aa@whs.wcape.school.za"},
+                {coordinates: new google.maps.LatLng(-34.139261,18.42968), id: "fish-hoek", title: "Fish Hoek Church", address_details: "Recreation Road<br/>Fish Hoek<br/>Ps.: Dan Serb<br/>Elder: Jonathan Edwards<br/>elder@fishhoeksda.co.za"},
+                
+                {coordinates: new google.maps.LatLng(-33.968575,18.508138), id: "athlone", title: "Athlone Church", address_details: "Buckley Road<br/>Gleemor<br/>Ps.: DG Harwood<br/>Elder: E Gibbons<br/>athlonesda@gmail.com"},
+                {coordinates: new google.maps.LatLng(-33.965299,18.52082), id: "riverside", title: "Riverside Church", address_details: "Klipfontein Road<br/>Athlone<br/>Ps.: DG Harwood<br/>Elder: L Truter"},
+                
+                //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "retreat", title: "Retreat Church", address_details: "18 Eleventh Road<br/>Heathfield<br/>Ps.: JE Tumpkin<br/>Elder: Austin Rodney <br/> email: arodney@pgwc.gov.za"},
+                {coordinates: new google.maps.LatLng(-34.077916,18.478083), id: "steenberg", title: "Steenberg Church", address_details: "52 Coniston Avenue, Coniston Park<br/>Steenberg<br/>Ps.: JE Tumpkin<br/>Elder: R Stevens<br/>Richards@rensa.co.za"},
+                //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "ocean-view", title: "Ocean View Church", address_details: "7 Bootes Close<br/>Ocean View <br/>Ps.: JE Tumpkin<br/>Elder: D De Bruin"},
+                //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "grassy-park", title: "Grassy Park Church", address_details: "Perth Road<br/>Grassy Park<br/>Ps.: JE Tumpkin<br/>Elder: AB Daniels <br/> email: arthur.daniels@capetown.gov.za"},
+            ];
+
+        </script>
         <script src="assets/js/main_maps.js"></script>
-        
+        <script src="assets/js/search.js"></script>
     </body>
     
 </html>
