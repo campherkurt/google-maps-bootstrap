@@ -1,7 +1,4 @@
 $(document).ready(function(){
-        //GLOBALS
-        var USER_POSITION;
-        var DESTINATION_MARKER;
 
 //---------------- MAP Options-------------------------------------//
         var styleArray = [
@@ -51,11 +48,12 @@ $(document).ready(function(){
         directionsRender.setMap(mapChurch);
 //--------------- END OF MAP OPTIONS--------------------------------//
 
-        function getRoute() { 
+//--------------- Actual Route Function ----------------------------//
+        function getRoute(markerObject, infoBoxObject) { 
             if (USER_POSITION)  {
                 var directionsOptions = {
                     origin: USER_POSITION, 
-                    destination: DESTINATION_MARKER,
+                    destination: markerObject.getPosition(),
                     travelMode: google.maps.DirectionsTravelMode.DRIVING
                 };
                 var directionsService = new google.maps.DirectionsService();
@@ -64,9 +62,10 @@ $(document).ready(function(){
                         directionsRender.setDirections(response);
                     };
                 });
+                infoBoxObject.close()
             };
         }
-//------------ This Deals with the user's position----------------------------//
+//------------ User's position Marker----------------------------//
         function showPosition(position)
             {
                 var userMarkerAnimation = google.maps.Animation.DROP;
@@ -129,24 +128,8 @@ $(document).ready(function(){
                 positionError(error)
                 });
 //------------MARKER OPTIONS--------------------//
-        var coordinateArray = [
-        {coordinates: new google.maps.LatLng(-33.989976,18.501597), id: "lansdowne", title: "Lansdowne Church", address_details: "Cnr of Leafmore Rd and Kritzinger Rd<br/>Kenwyn<br/>Ps.: Dan Serb<br/>Elder: Nigel Tyhalibongo<br/>xtyhalibongo@uwc.ac.za"},
-        {coordinates: new google.maps.LatLng(-34.02669,18.466301), id: "plumstead", title: "Plumstead Church", address_details: "242 Main Road<br/>Plumstead<br/>Ps.: Dan Serb<br/>Elder: Eric Bender<br/>redneb@telkomsa.net"},
-        {coordinates: new google.maps.LatLng(-33.950358,18.470487), id: "mowbray", title: "Mowbray Church", address_details: "10 Bollihope Crescent<br/>Mowbray<br/>Ps.: Dan Serb<br/>Head Eldr: Simon Hayes<br/>sdamb@xsinet.co.za"},
-        {coordinates: new google.maps.LatLng(-34.010946,18.474093), id: "wynberg", title: "Wynberg Church", address_details: "10 Hertford Road<br/>Wynberg<br/>Ps.: Dan Serb<br/>Elder: R Langenhoven<br/>randall@wescape.co.za"},        
-        {coordinates: new google.maps.LatLng(-33.982736,18.463622), id: "claremont", title: "Claremont Church", address_details: "21 Grove Avenue<br/>Claremont<br/>Ps.: Dan Serb<br/>Elder: A Adriaanse<br/>aa@whs.wcape.school.za"},
-        {coordinates: new google.maps.LatLng(-34.139261,18.42968), id: "fish-hoek", title: "Fish Hoek Church", address_details: "Recreation Road<br/>Fish Hoek<br/>Ps.: Dan Serb<br/>Elder: Jonathan Edwards<br/>elder@fishhoeksda.co.za"},
-        
-        {coordinates: new google.maps.LatLng(-33.968575,18.508138), id: "athlone", title: "Athlone Church", address_details: "Buckley Road<br/>Gleemor<br/>Ps.: DG Harwood<br/>Elder: E Gibbons<br/>athlonesda@gmail.com"},
-        {coordinates: new google.maps.LatLng(-33.965299,18.52082), id: "riverside", title: "Riverside Church", address_details: "Klipfontein Road<br/>Athlone<br/>Ps.: DG Harwood<br/>Elder: L Truter"},
-        
-        //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "retreat", title: "Retreat Church", address_details: "18 Eleventh Road<br/>Heathfield<br/>Ps.: JE Tumpkin<br/>Elder: Austin Rodney <br/> email: arodney@pgwc.gov.za"},
-        {coordinates: new google.maps.LatLng(-34.077916,18.478083), id: "steenberg", title: "Steenberg Church", address_details: "52 Coniston Avenue, Coniston Park<br/>Steenberg<br/>Ps.: JE Tumpkin<br/>Elder: R Stevens<br/>Richards@rensa.co.za"},
-        //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "ocean-view", title: "Ocean View Church", address_details: "7 Bootes Close<br/>Ocean View <br/>Ps.: JE Tumpkin<br/>Elder: D De Bruin"},
-        //{coordinates: new google.maps.LatLng(-33.975041,18.514021), id: "grassy-park", title: "Grassy Park Church", address_details: "Perth Road<br/>Grassy Park<br/>Ps.: JE Tumpkin<br/>Elder: AB Daniels <br/> email: arthur.daniels@capetown.gov.za"},
-        ];
-        var markerImage = new google.maps.MarkerImage("assets/img/conference.png");
-        var markerAnimation = google.maps.Animation.DROP
+            var markerImage = new google.maps.MarkerImage("assets/img/conference.png");
+            var markerAnimation = google.maps.Animation.DROP
 
 //------------SUPER STYLED INFO BOX-------------//
         var infoOptions = {
@@ -197,6 +180,7 @@ $(document).ready(function(){
 //-------------- Creating a closure to retain the correct markerInfoOptions -------------------//
             (function(marker) {
                 // Attaching a mouseover event to the current marker
+                ALL_MARKERS.push(marker);
                 google.maps.event.addListener(marker, "click", function(e) {
                     ib.setContent(marker.html); 
                     ib.open(mapChurch, marker);
@@ -211,7 +195,8 @@ $(document).ready(function(){
                                 DESTINATION_MARKER = markerObject.getPosition()
                                 //alert(DESTINATION_MARKER);
                                 if (USER_POSITION != null){
-                                    getRoute()
+                                    getRoute(markerObject, infoBoxObject);
+                                    
                                 }
                                 else {
                                     alert("Sorry but we need your location to plot a route, and your device cannot currently provide it");
