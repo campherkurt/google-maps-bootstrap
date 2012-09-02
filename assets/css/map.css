@@ -31,3 +31,7 @@
     padding: 0px;
     border: 1px solid #363838;
 }
+
+#search_input {
+    height: 25px;
+}
